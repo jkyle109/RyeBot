@@ -4,7 +4,7 @@ const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 
-const config = require("./config");
+//const config = require("./config");
 const prefix = process.env.prefix || config.prefix;
 const token = process.env.token || config.token;
 
