@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const client = Discord.Client();
+const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 
@@ -27,7 +27,7 @@ client.on("message", (message) => {
     if(!client.commands.has(commandName)){
         return;
     }
-    const command = client.commands.get(command);
+    const command = client.commands.get(commandName);
     if(command.args && !args.length) {  // Command requires args but user did not provide any
         message.reply("There were no arguments provided.");
         return;
@@ -40,3 +40,5 @@ client.on("message", (message) => {
         message.reply("Error with this command.");
     }
 });
+
+client.login(token);
