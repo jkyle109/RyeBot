@@ -1,0 +1,15 @@
+{
+  "name": "ryebot",
+  "version": "1.0.0",
+  "description": "Simple discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Jonathan Edey",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  }
+}
