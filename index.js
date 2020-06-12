@@ -68,8 +68,8 @@ client.on("message", (message) => {
         const regex = new RegExp(`${commandName} +`);
         const commandMessage = message.content.slice(process.env.PREFIX .length).split(regex, 2)[1];
         console.log("???? " + commandName + " " + commandMessage)
-        
-        const query = `INSERT INTO custom_commands (command_name, command_message) VALUES ('${escape(commandName)}', '${escape(commandMessage)}')`;
+        const t = ' j\' '
+        const query = `INSERT INTO custom_commands (command_name, command_message) VALUES ('${commandName.replace("'","''")}', '${commandMessage.replace("'","''")}')`;
         console.log(query)
         db.query(query, (err, res) => {
             if(err){
