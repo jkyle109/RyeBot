@@ -16,22 +16,88 @@ for(const file of commandFiles){
 }
 
 
+// db setup
+const pg = require("pg");
+const db = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
+
+let db_commands = {};
+
+function load_db_commands(){
+    db.query("SELECT * FROM custom_commands;", (err, res) => {
+        if(err){
+            throw err;
+        }
+        
+        db_commands = {}
+
+        for(let row of res.rows){
+            let command = JSON.parse(JSON.stringify(row));
+            db_commands[command.command_name] = command;
+        }
+    })
+}
+
+
 client.on("ready", () => {
+    db.connect();
+    load_db_commands();
     console.log("Ready!");
 });
 
 
 client.on("message", (message) => {
-    if(!message.content.startsWith(prefix) || message.author.bot){
+    if(!message.content.startsWith(prefix) || message.author.bot || message.content.slice(prefix.length).length === 0){
         return;
     }
     const args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift();
 
-    if(!client.commands.has(commandName)){
+    console.log(commandName.toLowerCase())
+    if(commandName.toLowerCase() === "addcommand" && args.length>=2){
+        if(!args>=2){
+            message.reply("Not enough arguments provided.");
+            return;
+        }
+        const commandName = args.shift();
+        const regex = new RegExp(`${commandName} +`);
+        const commandMessage = message.content.slice(process.env.PREFIX .length).split(regex, 2)[1];
+        console.log("???? " + commandName + " " + commandMessage)
+        
+        const query = `INSERT INTO custom_commands (command_name, command_message) VALUES ('${escape(commandName)}', '${escape(commandMessage)}')`;
+        console.log(query)
+        db.query(query, (err, res) => {
+            if(err){
+                throw err;
+            }
+            message.reply(`The command "${prefix}${commandName}" has been added.`);
+            load_db_commands();
+        })
         return;
     }
-    const command = client.commands.get(commandName);
+
+
+
+
+
+
+    let command;
+    if(!client.commands.has(commandName)){
+        if(!commandName in db_commands){
+            return;
+        } else {
+            args[0] = db_commands[commandName].command_message;
+            command = client.commands.get("customMessage");
+        }
+    } else {
+        command = client.commands.get(commandName);
+    }
+
     if(command.args && !args.length) {  // Command requires args but user did not provide any
         message.reply("There were no arguments provided.");
         return;
