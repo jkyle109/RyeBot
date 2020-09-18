@@ -9,6 +9,7 @@ const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith("
 
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
+const ownerID = process.env.BOT_OWNER;
 
 for(const file of commandFiles){
     const command = require(`./commands/${file}`);
@@ -47,6 +48,7 @@ function load_db_commands(){
 client.on("ready", () => {
     db.connect();
     // load_db_commands();
+    const owner = client.users.get("202290363489058816")
     console.log("Ready!");
 });
 
@@ -63,21 +65,39 @@ client.on("message", (message) => {
     if(message.author.tag == "kylus#2238"){
         if(message.content.toLowerCase().includes("not behind")){
             message.reply("You're behind bro!")
+            return;
         } 
         else if(message.content.toLowerCase().includes("behind")){
             message.reply("You're not behind!")
+            return;
         }
     }
     else{
         if(message.content.toLowerCase().includes("behind")){
             if(genRand(0,99)%2 == 0){
                 message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
+                return;
             }
             else{
                 message.reply("You're not behind <:EZ:756353626032570448>")
+                return;
             }
-            
         }
+    }
+
+    if(message.content.toLowerCase().includes("@everyone" && message.channel.type != "dm")){
+        message.channel.send("<:angryLeft:754561213333110894>")
+        owner.send("This kid right here: " + message.author.tag)
+        return;
+    }
+
+    if(message.channel.type == "dm"){
+        const embed = new MesssageEmbed()
+            .setTitle("VR Bot got a dm from " + message.author.tag)
+            .setColor(0xff0000)
+            .setDescription(message.content)
+        owner.send(embed)
+        return;
     }
 
 
