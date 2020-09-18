@@ -60,6 +60,9 @@ client.on("message", (message) => {
         if(message.content.toLowerCase().includes("behind")){
             message.reply("You're not behind!")
         }
+        if(message.content.toLowerCase().includes("not behind")){
+            message.reply("You're behind bro!")
+        }
     }
     else{
         if(message.content.toLowerCase().includes("behind")){
