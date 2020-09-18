@@ -54,7 +54,7 @@ client.on("ready", () => {
 client.on("message", (message) => {
 
     if(message.author.tag == "kylus#2238"){
-        if(message.contains("behind")){
+        if(message.content.includes("behind")){
             message.reply("You're not behind.")
         }
     }
