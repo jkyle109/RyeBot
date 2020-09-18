@@ -1,6 +1,8 @@
 const fs = require("fs");
 const Discord = require("discord.js");
 
+
+
 require("dotenv").config();
 
 const client = new Discord.Client();
@@ -48,7 +50,7 @@ function load_db_commands(){
 client.on("ready", () => {
     db.connect();
     // load_db_commands();
-    const owner = client.users.get("202290363489058816")
+    // const owner = client.users.cache.get(ownerID)
     console.log("Ready!");
 });
 
@@ -85,18 +87,25 @@ client.on("message", (message) => {
         }
     }
 
-    if(message.content.toLowerCase().includes("@everyone" && message.channel.type != "dm")){
-        message.channel.send("<:angryLeft:754561213333110894>")
-        owner.send("This kid right here: " + message.author.tag)
+    if(message.channel.type != "dm" && message.content.toLowerCase().includes(message.guild.roles.everyone.toString())){
+        message.channel.send("<a:Ping:756409580753518642>")
+        const embed = new Discord.MessageEmbed()
+            .setAuthor(message.author.username)
+            .setTitle("From: " + message.guild.name + "\nIn: #" + message.channel.name)
+            .setColor(0xff6000)
+            .setDescription(message.content)
+            .setTimestamp()
+        client.users.cache.get(ownerID).send(embed)
         return;
     }
 
     if(message.channel.type == "dm"){
-        const embed = new MesssageEmbed()
-            .setTitle("VR Bot got a dm from " + message.author.tag)
+        const embed = new Discord.MessageEmbed()
+            .setAuthor(message.author.username)
             .setColor(0xff0000)
             .setDescription(message.content)
-        owner.send(embed)
+            .setTimestamp()
+        client.users.cache.get(ownerID).send(embed)
         return;
     }
 
