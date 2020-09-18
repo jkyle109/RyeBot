@@ -50,23 +50,33 @@ client.on("ready", () => {
     console.log("Ready!");
 });
 
+function genRand(min, max){
+    return Math.floor(Math.random()*(max-min+1)) + min
+}
+
 
 client.on("message", (message) => {
     if(message.author.bot){
         return
     }
 
-    if(message.author.tag == "kylus#2238" || message.author.tag == "jkyle109#2723"){
-        if(message.content.toLowerCase().includes("behind")){
-            message.reply("You're not behind!")
-        }
+    if(message.author.tag == "kylus#2238"){
         if(message.content.toLowerCase().includes("not behind")){
             message.reply("You're behind bro!")
+        } 
+        else if(message.content.toLowerCase().includes("behind")){
+            message.reply("You're not behind!")
         }
     }
     else{
         if(message.content.toLowerCase().includes("behind")){
-            message.reply("You might be behind, lol")
+            if(genRand(0,99)%2 == 0){
+                message.reply("You might be behind, lol :pepeLaugh:")
+            }
+            else{
+                message.reply("You're not behind :EZ:")
+            }
+            
         }
     }
 
