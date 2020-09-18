@@ -52,10 +52,18 @@ client.on("ready", () => {
 
 
 client.on("message", (message) => {
+    if(message.author.bot){
+        return
+    }
 
-    if(message.author.tag == "kylus#2238"){
+    if(message.author.tag == "kylus#2238" || message.author.tag == "jkyle109#2723"){
         if(message.content.toLowerCase().includes("behind")){
-            message.reply("You're not behind.")
+            message.reply("You're not behind!")
+        }
+    }
+    else{
+        if(message.content.toLowerCase().includes("behind")){
+            message.reply("You might be behind, lol")
         }
     }
 
