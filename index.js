@@ -49,8 +49,13 @@ function load_db_commands(){
 
 client.on("ready", () => {
     db.connect();
-    // load_db_commands();
-    // const owner = client.users.cache.get(ownerID)
+    client.user.setPresence({
+        status: 'dnd',
+        activity: {
+            name: "anime...",
+            type: "WATCHING",
+        }
+    })
     console.log("Ready!");
 });
 
@@ -124,6 +129,47 @@ client.on("message", (message) => {
 
     if(commandName == "ping"){
         message.reply("pong")
+    }
+
+    if(commandName == "stream"){
+        client.user.setPresence({
+            status: 'online',
+            activity: {
+                name: 'Watching Kylus1',
+                type: "STREAMING",
+                url: 'https://www.twitch.tv/kylus1'
+            }
+        })
+    }
+
+    if(commandName == "ss_anime"){
+        client.user.setPresence({
+            status: 'dnd',
+            activity: {
+                name: "anime...",
+                type: "WATCHING",
+            }
+        })
+    }
+
+    if(commandName == "ss_music"){
+        client.user.setPresence({
+            status: 'dnd',
+            activity: {
+                name: "weeb music...",
+                type: "LISTENING",
+            }
+        })
+    }
+
+    if(commandName == "ss_chill"){
+        client.user.setPresence({
+            status: 'online',
+            activity: {
+                name: "Chill",
+                type: "CUSTOM_STATUS",
+            }
+        })
     }
 
 
