@@ -7,15 +7,15 @@ require("dotenv").config();
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
+const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));     // Reads command folder for commands files
 
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
 const ownerID = process.env.BOT_OWNER;
 
 for(const file of commandFiles){
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
+    const command = require(`./commands/${file}`);      //Imports the command modules
+    client.commands.set(command.name, command);         
 }
 
 
@@ -49,6 +49,7 @@ function load_db_commands(){
 
 client.on("ready", () => {
     db.connect();
+    load_db_commands()
     client.user.setPresence({
         status: 'dnd',
         activity: {
@@ -65,6 +66,8 @@ function genRand(min, max){
 
 
 client.on("message", (message) => {
+    // console.log(db_commands)
+    // console.log(client.commands)
     if(message.author.bot){
         return
     }
@@ -115,138 +118,41 @@ client.on("message", (message) => {
     }
 
 
-
-
-
     if(!message.content.startsWith(prefix) || message.author.bot || message.content.slice(prefix.length).length === 0){
         return;
     }
     const args = message.content.slice(prefix.length).split(/ +/);
-    const commandName = args.shift().toLowerCase();
+    const commandName = args.shift();
 
     console.log(commandName)
 
 
-    if(commandName == "ping"){
-        message.reply("pong")
+    let command;
+    load_db_commands();
+    if(!client.commands.has(commandName)){
+        if(!(commandName in db_commands)){
+            return;
+        } else {
+            // console.log(db_commands)
+            args[0] = db_commands[commandName].command_message;
+            command = client.commands.get("customMessage");
+        }
+    } else {
+        command = client.commands.get(commandName);
     }
 
-    if(commandName == "stream"){
-        client.user.setPresence({
-            status: 'online',
-            activity: {
-                name: 'Watching Kylus1',
-                type: "STREAMING",
-                url: 'https://www.twitch.tv/kylus1'
-            }
-        })
+    if(command.args && !args.length) {  // Command requires args but user did not provide any
+        message.reply("There were no arguments provided.");
+        return;
     }
 
-    if(commandName == "ss_anime"){
-        client.user.setPresence({
-            status: 'dnd',
-            activity: {
-                name: "anime...",
-                type: "WATCHING",
-            }
-        })
+    try{
+        command.execute(message, args, client, db, db_commands);
+        load_db_commands();
+    } catch(error) {
+        console.log(error);
+        message.reply("Error with this command.");
     }
-
-    if(commandName == "ss_music"){
-        client.user.setPresence({
-            status: 'dnd',
-            activity: {
-                name: "weeb music...",
-                type: "LISTENING",
-            }
-        })
-    }
-
-    if(commandName == "ss_chill"){
-        client.user.setPresence({
-            status: 'online',
-            activity: {
-                name: "Chill",
-                type: "CUSTOM_STATUS",
-            }
-        })
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // if(commandName.toLowerCase() === "addcommand" && args.length>=2){
-    //     if(!args>=2){
-    //         message.reply("Not enough arguments provided.");
-    //         return;
-    //     }
-    //     const commandName = args.shift();
-    //     const commandMessage = message.content.slice(process.env.PREFIX .length).split(commandName, 2)[1];
-    //     console.log("???? " + commandName + " " + commandMessage)
-    //     const query = `INSERT INTO custom_commands (command_name, command_message) VALUES ($$${commandName}$$, $$${commandMessage}$$)`;
-    //     console.log(query)
-    //     db.query(query, (err, res) => {
-    //         if(err){
-    //             throw err;
-    //         }
-    //         message.reply(`The command "${prefix}${commandName}" has been added.`);
-    //         load_db_commands();
-    //     })
-    //     return;
-    // }
-
-
-    // let command;
-    // if(!client.commands.has(commandName)){
-    //     if(!commandName in db_commands){
-    //         return;
-    //     } else {
-    //         args[0] = db_commands[commandName].command_message;
-    //         command = client.commands.get("customMessage");
-    //     }
-    // } else {
-    //     command = client.commands.get(commandName);
-    // }
-
-    // if(command.args && !args.length) {  // Command requires args but user did not provide any
-    //     message.reply("There were no arguments provided.");
-    //     return;
-    // }
-
-    // try{
-    //     command.execute(message, args);
-    // } catch(error) {
-    //     console.log(error);
-    //     message.reply("Error with this command.");
-    // }
 });
 
 client.login(token);

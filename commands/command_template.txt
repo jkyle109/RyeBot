@@ -1,0 +1,8 @@
+module.exports = {
+    name: "COMMAND_NAME",
+    description: "COMMAND_DESCRIPTION",
+    args: NEED_COMMAND_ARGS,
+    execute(message, client, args){
+        CODE
+    }
+}
