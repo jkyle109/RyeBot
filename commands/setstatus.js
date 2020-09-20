@@ -1,7 +1,8 @@
 module.exports = {
     name: "ss",
-    description: "Sets bot status",
+    description: "Sets bot status to argument: stream, anime, music, chill.",
     args: true,
+    hidden: false,
     execute(message, args, client){
         
         commandName = args[0]

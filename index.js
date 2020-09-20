@@ -73,27 +73,27 @@ client.on("message", (message) => {
     }
 
     if(message.author.tag == "kylus#2238"){
-        if(message.content.toLowerCase().includes("not behind")){
-            message.reply("You're behind bro!")
-            return;
-        } 
-        else if(message.content.toLowerCase().includes("behind")){
+        // if(message.content.toLowerCase().includes("not behind")){
+        //     message.reply("You're behind bro!")
+        //     return;
+        // } 
+        if(message.content.toLowerCase().includes("behind")){
             message.reply("You're not behind!")
             return;
         }
     }
-    else{
-        if(message.content.toLowerCase().includes("behind")){
-            if(genRand(0,99)%2 == 0){
-                message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
-                return;
-            }
-            else{
-                message.reply("You're not behind <:EZ:756353626032570448>")
-                return;
-            }
-        }
-    }
+    // else{
+    //     if(message.content.toLowerCase().includes("behind")){
+    //         if(genRand(0,99)%2 == 0){
+    //             message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
+    //             return;
+    //         }
+    //         else{
+    //             message.reply("You're not behind <:EZ:756353626032570448>")
+    //             return;
+    //         }
+    //     }
+    // }
 
     if(message.channel.type != "dm" && message.content.toLowerCase().includes(message.guild.roles.everyone.toString())){
         message.channel.send("<a:Ping:756409580753518642>")
@@ -109,7 +109,7 @@ client.on("message", (message) => {
 
     if(message.channel.type == "dm"){
         const embed = new Discord.MessageEmbed()
-            .setAuthor(message.author.username)
+            .setAuthor(client.user.username, client.user.avatarURL())
             .setColor(0xff0000)
             .setDescription(message.content)
             .setTimestamp()
@@ -129,11 +129,11 @@ client.on("message", (message) => {
 
     let command;
     load_db_commands();
-    if(!client.commands.has(commandName)){
-        if(!(commandName in db_commands)){
+    // TODO: Make this into a function that loops so we can add aliases
+    if(!client.commands.has(commandName)){  // Checks for client commands
+        if(!(commandName in db_commands)){  // Checks for database commands
             return;
         } else {
-            // console.log(db_commands)
             args[0] = db_commands[commandName].command_message;
             command = client.commands.get("customMessage");
         }
@@ -147,7 +147,7 @@ client.on("message", (message) => {
     }
 
     try{
-        command.execute(message, args, client, db, db_commands);
+        command.execute(message, args, client, db, db_commands);    // Executes command 
         load_db_commands();
     } catch(error) {
         console.log(error);

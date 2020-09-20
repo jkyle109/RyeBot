@@ -1,11 +1,12 @@
 module.exports = {
-    name: "addcommand",
-    description: "Adds a custom command",
+    name: "ac",
+    description: "Adds a custom command.",
     args: true,
+    hidden: false,
     execute(message, args, client, db){
         // const commandName = args.shift();
         // const regex = new RegExp(`${commandName} +`);
-        // const commandMessage = message.content.slice(process.env.PREFIX .length).split(regex, 2)[1];
+        // const commandMessage = message.content.slice(process.env.PREFIX.length).split(regex, 2)[1];
         // console.log(commandMessage, commandName)
 
         require("dotenv").config();
@@ -17,7 +18,8 @@ module.exports = {
         }
         
         const commandName = args.shift();
-        const commandMessage = message.content.slice(process.env.PREFIX .length).split(commandName, 2)[1];
+        let regex = new RegExp(commandName + " (.+)" )      // RegExp to split by first instance of a phrase
+        const commandMessage = message.content.slice(process.env.PREFIX.length).split(regex)[1];
         console.log("???? " + commandName + " " + commandMessage)
         const query = `INSERT INTO custom_commands (command_name, command_message) VALUES ($$${commandName}$$, $$${commandMessage}$$)`;
         console.log(query)
