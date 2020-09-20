@@ -96,7 +96,7 @@ client.on("message", (message) => {
     // }
 
     if(message.channel.type != "dm" && message.content.toLowerCase().includes(message.guild.roles.everyone.toString())){
-        message.channel.send("<a:Ping:756409580753518642>")
+        message.channel.send("<:AngryPing:755244083953270905>")
         const embed = new Discord.MessageEmbed()
             .setAuthor(message.author.username)
             .setTitle("From: " + message.guild.name + "\nIn: #" + message.channel.name)
