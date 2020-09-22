@@ -72,6 +72,10 @@ client.on("message", (message) => {
         return
     }
 
+    if(message.content.toLowerCase().includes("lowerky") || message.content.toLowerCase().includes("lowerkey") || message.content.toLowerCase().includes("low key")){
+        message.delete()
+    }
+
     if(message.author.tag == "kylus#2238"){
         // if(message.content.toLowerCase().includes("not behind")){
         //     message.reply("You're behind bro!")
