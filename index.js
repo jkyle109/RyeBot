@@ -57,7 +57,8 @@ client.on("ready", () => {
             type: "WATCHING",
         }
     })
-    console.log("Ready!");
+    client.users.cache.get(ownerID).send("Ready!")
+    console.log("Ready!")
 });
 
 function genRand(min, max){
