@@ -86,18 +86,18 @@ client.on("message", (message) => {
             return;
         }
     }
-    // else{
-    //     if(message.content.toLowerCase().includes("behind")){
-    //         if(genRand(0,99)%2 == 0){
-    //             message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
-    //             return;
-    //         }
-    //         else{
-    //             message.reply("You're not behind <:EZ:756353626032570448>")
-    //             return;
-    //         }
-    //     }
-    // }
+    else{
+        if(message.content.toLowerCase().includes("behind")){
+            if(genRand(0,99)%2 == 0){
+                message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
+                return;
+            }
+            else{
+                message.reply("You're not behind <:EZ:756353626032570448>")
+                return;
+            }
+        }
+    }
 
     if(message.channel.type != "dm" && message.content.toLowerCase().includes(message.guild.roles.everyone.toString())){
         message.channel.send("<:AngryPing:755244083953270905>")
