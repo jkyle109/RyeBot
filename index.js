@@ -89,7 +89,7 @@ client.on("message", (message) => {
     }
     else{
         if(message.content.toLowerCase().includes("behind")){
-            if(genRand(0,99)%2 == 0){
+            if(genRand(0,99)%10 == 0){
                 message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
                 return;
             }
