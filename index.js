@@ -12,6 +12,7 @@ const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith("
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
 const ownerID = process.env.BOT_OWNER;
+const kyleVid = process.env.KYLE_VID;
 
 for(const file of commandFiles){
     const command = require(`./commands/${file}`);      //Imports the command modules
@@ -89,7 +90,11 @@ client.on("message", (message) => {
     }
     else{
         if(message.content.toLowerCase().includes("behind")){
-            if(genRand(0,99)%10 == 0){
+            if(genRand(1,100)%4 == 0){
+                if(genRand(1,20)%4 == 0){
+                    message.reply({files: [kyleVid]})
+                    return;
+                }
                 message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
                 return;
             }
