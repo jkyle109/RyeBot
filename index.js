@@ -81,8 +81,10 @@ client.on("message", (message) => {
     }
 
     if(message.author.tag == "Captain Save a Hoe#6969"){
-        message.reply("How are you so handsome?",{files: [igor]})
-        return
+        if(genRand(1,100)%50 == 0){
+            message.reply("How are you so handsome?",{files: [igor]})
+            return
+        }
     }
 
     if(message.author.tag == "kylus#2238"){
