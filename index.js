@@ -80,7 +80,7 @@ client.on("message", (message) => {
         message.delete()
     }
 
-    if(message.author.id == "Captain Save a Hoe#6969"){
+    if(message.author.tag == "Captain Save a Hoe#6969"){
         message.reply("How are you so handsome?",{files: [igor]})
         return
     }
