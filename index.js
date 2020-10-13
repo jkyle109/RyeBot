@@ -12,7 +12,9 @@ const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith("
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
 const ownerID = process.env.BOT_OWNER;
+
 const kyleVid = process.env.KYLE_VID;
+const igor = process.env.IGOR;
 
 for(const file of commandFiles){
     const command = require(`./commands/${file}`);      //Imports the command modules
@@ -76,6 +78,11 @@ client.on("message", (message) => {
 
     if(message.content.toLowerCase().includes("lowerky") || message.content.toLowerCase().includes("lowerkey") || message.content.toLowerCase().includes("low key")){
         message.delete()
+    }
+
+    if(message.author.id == "Captain Save a Hoe#6969"){
+        message.reply("How are you so handsome?",{files: [igor]})
+        return
     }
 
     if(message.author.tag == "kylus#2238"){
