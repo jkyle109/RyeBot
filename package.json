@@ -10,9 +10,19 @@
   "author": "Jonathan Edey",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "pg": "^8.2.1",
+    "pg": "^8.5.1",
     "pg-escape": "^0.2.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkyle109/RyeBot.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/jkyle109/RyeBot/issues"
+  },
+  "homepage": "https://github.com/jkyle109/RyeBot#readme"
 }

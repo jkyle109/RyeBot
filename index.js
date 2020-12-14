@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));     // Reads command folder for commands files
+const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js")); // Reads command folder for commands files
 
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
@@ -15,10 +15,11 @@ const ownerID = process.env.BOT_OWNER;
 
 const kyleVid = process.env.KYLE_VID;
 const igor = process.env.IGOR;
+const SANTA = process.env.SANTA;
 
-for(const file of commandFiles){
-    const command = require(`./commands/${file}`);      //Imports the command modules
-    client.commands.set(command.name, command);         
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`); //Imports the command modules
+    client.commands.set(command.name, command);
 }
 
 
@@ -34,15 +35,15 @@ const db = new pg.Client({
 
 let db_commands = {};
 
-function load_db_commands(){
+function load_db_commands() {
     db.query("SELECT * FROM custom_commands;", (err, res) => {
-        if(err){
+        if (err) {
             throw err;
         }
-        
+
         db_commands = {}
 
-        for(let row of res.rows){
+        for (let row of res.rows) {
             let command = JSON.parse(JSON.stringify(row));
             db_commands[command.command_name] = command;
         }
@@ -50,7 +51,7 @@ function load_db_commands(){
 }
 
 
-client.on("ready", () => {
+client.on("ready", async() => {
     db.connect();
     load_db_commands()
     client.user.setPresence({
@@ -60,61 +61,72 @@ client.on("ready", () => {
             type: "WATCHING",
         }
     })
-    client.users.cache.get(ownerID).send("Ready!")
+    const user = await client.users.fetch(ownerID)
+    user.send("Ready!")
     console.log("Ready!")
 });
 
-function genRand(min, max){
-    return Math.floor(Math.random()*(max-min+1)) + min
+function genRand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 
 client.on("message", (message) => {
     // console.log(db_commands)
     // console.log(client.commands)
-    if(message.author.bot){
+    if (message.author.bot) {
         return
     }
 
-    if(message.content.toLowerCase().includes("lowerky") || message.content.toLowerCase().includes("lowerkey") || message.content.toLowerCase().includes("low key")){
+    if (message.channel.type == "dm") {
+        const embed = new Discord.MessageEmbed()
+            .setAuthor('Santa', 'https://cdn.betterttv.net/emote/5fa35c3e40eb9502e223d70b/3x')
+            .setColor(0xff0000)
+            .setDescription(message.content)
+
+        client.channels.cache.get(SANTA).send(embed);
+        // client.users.cache.get(ownerID).send(embed)
+        return;
+    }
+
+
+    if (message.content.toLowerCase().includes("lowerky") || message.content.toLowerCase().includes("lowerkey") || message.content.toLowerCase().includes("low key")) {
         message.delete()
     }
 
-    if(message.author.tag == "Captain Save a Hoe#6969"){
-        if(genRand(1,10000)%3334 == 0){
-            message.reply("How are you so handsome?",{files: [igor]})
+    if (message.author.tag == "Captain Save a Hoe#6969") {
+        if (genRand(1, 10000) % 3334 == 0) {
+            message.reply("How are you so handsome?", { files: [igor] })
             return
         }
     }
 
-    if(message.author.tag == "kylus#2238"){
+    if (message.author.tag == "kylus#2238") {
         // if(message.content.toLowerCase().includes("not behind")){
         //     message.reply("You're behind bro!")
         //     return;
         // } 
-        if(message.content.toLowerCase().includes("behind")){
+        if (message.content.toLowerCase().includes("behind")) {
             message.reply("You're not behind!")
             return;
         }
-    }
-    else{
-        if(message.content.toLowerCase().includes("behind")){
-            if(genRand(1,100)%4 == 0){
-                if(genRand(1,20)%4 == 0){
-                    message.reply({files: [kyleVid]})
+    } else {
+        if (message.content.toLowerCase().includes("behind")) {
+            if (genRand(1, 100) % 4 == 0) {
+                if (genRand(1, 20) % 4 == 0) {
+                    message.reply({ files: [kyleVid] })
                     return;
                 }
                 message.reply("You might be behind, lol <:pepeLaugh:668310019703439381>")
                 return;
-            }
-            else{
+            } else {
                 message.reply("You're not behind <:EZ:756353626032570448>")
                 return;
             }
         }
     }
 
-    if(message.channel.type != "dm" && message.content.toLowerCase().includes(message.guild.roles.everyone.toString())){
+    if (message.channel.type != "dm" && message.content.toLowerCase().includes(message.guild.roles.everyone.toString())) {
         message.channel.send("<:AngryPing:755244083953270905>")
         const embed = new Discord.MessageEmbed()
             .setAuthor(message.author.username)
@@ -126,18 +138,10 @@ client.on("message", (message) => {
         return;
     }
 
-    if(message.channel.type == "dm"){
-        const embed = new Discord.MessageEmbed()
-            .setAuthor(client.user.username, client.user.avatarURL())
-            .setColor(0xff0000)
-            .setDescription(message.content)
-            .setTimestamp()
-        client.users.cache.get(ownerID).send(embed)
-        return;
-    }
 
 
-    if(!message.content.startsWith(prefix) || message.author.bot || message.content.slice(prefix.length).length === 0){
+
+    if (!message.content.startsWith(prefix) || message.author.bot || message.content.slice(prefix.length).length === 0) {
         return;
     }
     const args = message.content.slice(prefix.length).split(/ +/);
@@ -149,8 +153,8 @@ client.on("message", (message) => {
     let command;
     load_db_commands();
     // TODO: Make this into a function that loops so we can add aliases
-    if(!client.commands.has(commandName)){  // Checks for client commands
-        if(!(commandName in db_commands)){  // Checks for database commands
+    if (!client.commands.has(commandName)) { // Checks for client commands
+        if (!(commandName in db_commands)) { // Checks for database commands
             return;
         } else {
             args[0] = db_commands[commandName].command_message;
@@ -160,15 +164,15 @@ client.on("message", (message) => {
         command = client.commands.get(commandName);
     }
 
-    if(command.args && !args.length) {  // Command requires args but user did not provide any
+    if (command.args && !args.length) { // Command requires args but user did not provide any
         message.reply("There were no arguments provided.");
         return;
     }
 
-    try{
-        command.execute(message, args, client, db, db_commands);    // Executes command 
+    try {
+        command.execute(message, args, client, db, db_commands); // Executes command 
         load_db_commands();
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         message.reply("Error with this command.");
     }
